@@ -4,22 +4,18 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,33 +44,23 @@ fun App(counterViewModel: CounterViewModel) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Card(
-                    modifier = Modifier.size(250.dp),
-                    elevation = 16.dp,
-                    shape = CircleShape
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Picker(counterViewModel.hoursProgressState)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Picker(counterViewModel.minutesProgressState)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Picker(counterViewModel.secondProgressState)
-                    }
+                if (counterViewModel.inEditMode.value) {
+                    TimeEditor(counterViewModel = counterViewModel)
+                } else {
+                    TimeCounter(counterViewModel = counterViewModel)
                 }
                 Spacer(modifier = Modifier.height(24.dp))
+                val iconValue =
+                    if (counterViewModel.inEditMode.value) Icons.Filled.PlayArrow else Icons.Filled.Stop
                 IconButton(
                     onClick = {
-
+                        counterViewModel.toggleEditMode()
                     }
                 ) {
-                    Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Start")
+                    Icon(imageVector = iconValue, contentDescription = "Start/Stop")
                 }
             }
         }
     }
 }
+
